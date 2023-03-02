@@ -4,6 +4,7 @@
 <head>
   <title>Pittsburgh Zillow Properties</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://d3js.org/topojson.v3.min.js"></script>
   <link rel="stylesheet" type="text/css" href="styles/site.css">
 </head>
 
@@ -12,5 +13,47 @@
     <div class="title">
       <h1>Pittsburgh Zillow Properties</h1>
     </div>
+    <svg id="map" height="500" width="500"></svg>
   </div>
+
+
+  <script>
+    const map = d3.select("svg#map");
+
+    const requestData = async function () {
+      const pittsburghMap = await d3.json("data/pittsburgh.json");
+      const mapHeight = map.attr("height");
+      const mapWidth = map.attr("width");
+
+      console.log(pittsburghMap);
+
+      let viewport = map.append("g");
+
+      var neighborhoodMesh = topojson.mesh(pittsburghMap, pittsburghMap.objects.pittsburgh)
+      var neighborhoods = topojson.feature(pittsburghMap, pittsburghMap.objects.pittsburgh)
+      console.log(neighborhoods);
+      var proj = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoodMesh);
+      var path = d3.geoPath().projection(proj);
+
+      
+
+      viewport.selectAll("path.neighborhood")
+              .data(neighborhoods.features)
+              .join("path")
+              .attr("class", "neighborhood")
+              .style("fill", "lightgrey")
+              .attr("d", path);
+
+      let mesh = viewport.append("path")
+                  .datum(neighborhoodMesh)
+                  .style("stroke-width", "3px")
+                  .style("stroke", "pink")
+
+                //  .attr("class","outline")
+                  .attr("d", path);
+
+
+    }
+    requestData();
+  </script>
 </body>
