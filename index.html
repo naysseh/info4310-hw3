@@ -22,6 +22,9 @@
 
     const requestData = async function () {
       const pittsburghMap = await d3.json("data/pittsburgh.json");
+
+      const zillowData = await d3.csv("data/zillow-filtered.csv", d3.autoType);
+      console.log(zillowData);
       const mapHeight = map.attr("height");
       const mapWidth = map.attr("width");
 
@@ -32,27 +35,29 @@
       var neighborhoodMesh = topojson.mesh(pittsburghMap, pittsburghMap.objects.pittsburgh)
       var neighborhoods = topojson.feature(pittsburghMap, pittsburghMap.objects.pittsburgh)
       console.log(neighborhoods);
-      var proj = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoodMesh);
+      var proj = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoods);
       var path = d3.geoPath().projection(proj);
-
-      
 
       viewport.selectAll("path.neighborhood")
               .data(neighborhoods.features)
               .join("path")
               .attr("class", "neighborhood")
-              .style("fill", "lightgrey")
+              .style("fill", "lightblue")
+              .style("stroke", "black")
+              .style("stroke-width", "1px")
               .attr("d", path);
 
-      let mesh = viewport.append("path")
-                  .datum(neighborhoodMesh)
-                  .style("stroke-width", "3px")
-                  .style("stroke", "pink")
 
-                //  .attr("class","outline")
-                  .attr("d", path);
-
-
+    //plot points on the map 
+    let houses = viewport.selectAll("circle.house")
+                         .data(zillowData)
+                         .join("circle")
+                         .attr("class", "house")
+                         .attr("cx", d => proj([d.Longitude, d.Latitude])[0])
+                         .attr("cy", d => proj([d.Longitude, d.Latitude])[1])
+                         .attr("r", "2px")
+                         .attr("note", d => d['Street Address'])
+                         .style("fill", "navy")         
     }
     requestData();
   </script>
