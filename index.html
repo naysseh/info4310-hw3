@@ -96,10 +96,13 @@
                           if (selectedProperties.length == 2){
                             updatePanel(selectedProperties)
                           }
+                          else{
+                            updatePanel([])
+                          }
                         })
     }
 
-    let headers = ["Neighborhood", "Sale Amount","Bathroom", "Bedrooms"]
+    let headers = ["Street Address", "Neighborhood", "Sale Amount","Bathroom", "Bedrooms"]
     let panelTitle = d3.select("#panel").append("h3");
     panelTitle.text("Price Comparison")
       let table = d3.select("#panel").append("table");
@@ -134,10 +137,9 @@
             update => update.selectAll("td").remove(),
             exit => exit.remove());
 
-        rows.append("td").attr("class", "table-title").text(d => d[headers[0]]);
-        rows.append("td").text(d => d[headers[1]]);
-        rows.append("td").text(d => d[headers[2]]);
-        rows.append("td").text(d => d[headers[3]]);
+        for (var i = 0; i< headers.length; i++){
+          rows.append("td").text(d => d[headers[i]]);
+        }
       }
 
     requestData();
