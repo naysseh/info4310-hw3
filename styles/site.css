@@ -1,0 +1,20 @@
+.selectedProperty{
+  stroke : #dba5ff
+  stroke-width":3px"
+}
+
+.orientation {
+  display: flex;
+  flex-direction: row;
+}
+
+.side-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+#panel {
+  background-color: rgb(255, 186, 186);
+  width: 500px;
+  height: 450px;
+}
