@@ -16,6 +16,8 @@
     <div class = "orientation">   
       <svg id="map" height="500" width="500"></svg>
       <div class = "side-panel"> 
+        <button class = "button" onclick= "reset()" type="button">Reset</button>
+
         <div id="panel"></div>
       </div>
     </div>
@@ -105,22 +107,22 @@
     let headers = ["Street Address", "Neighborhood", "Sale Amount","Bathroom", "Bedrooms"]
     let panelTitle = d3.select("#panel").append("h3");
     panelTitle.text("Price Comparison")
-      let table = d3.select("#panel").append("table");
-      let header = table.selectAll("th")
-        .data(headers)
-        .enter().append("th")
-        .text(function (d) {
-          return d;
-        })
-        .attr("class",
-          function (d) {
-            if (d == "Title") {
-              return "table-title";
-            }
-            else {
-              return "";
-            }
-          });
+    let table = d3.select("#panel").append("table");
+    let header = table.selectAll("th")
+      .data(headers)
+      .enter().append("th")
+      .text(function (d) {
+        return d;
+      })
+      .attr("class",
+        function (d) {
+          if (d == "Title") {
+            return "table-title";
+          }
+          else {
+            return "";
+          }
+        });
 
       function updatePanel(selectedPropertiesList) {
         console.log(selectedPropertiesList)
@@ -140,6 +142,12 @@
         for (var i = 0; i< headers.length; i++){
           rows.append("td").text(d => d[headers[i]]);
         }
+      }
+      function reset(){
+        selectedProperties= []
+        d3.selectAll("circle.house")
+                          .attr("stroke-width", "0px");
+        updatePanel([])
       }
 
     requestData();
