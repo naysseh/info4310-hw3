@@ -14,7 +14,29 @@
 }
 
 #panel {
-  background-color: rgb(255, 186, 186);
-  width: 500px;
+  width: 600px;
   height: 450px;
+  margin-left: 5px;
+  margin-top: 5px;
+  padding: 5px;
+  padding-left: 15px;
+}
+
+td,
+th {
+  border-bottom: 1px solid #E1E1E1;
+  text-align: left;
+  font-size: 14px;
+  width: 100px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+td {
+  font-size: 12px;
+}
+
+.table-title {
+  overflow-wrap: break-word;
+  margin-right: 15px;
 }

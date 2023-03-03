@@ -94,12 +94,51 @@
                           console.log(propetySelected.classed("selectedProperty"))
                           console.log(selectedProperties)
                           if (selectedProperties.length == 2){
-                            // updatePanel(selectedProperties)
+                            updatePanel(selectedProperties)
                           }
                         })
-         
     }
 
+    let headers = ["Neighborhood", "Sale Amount","Bathroom", "Bedrooms"]
+    let panelTitle = d3.select("#panel").append("h3");
+    panelTitle.text("Price Comparison")
+      let table = d3.select("#panel").append("table");
+      let header = table.selectAll("th")
+        .data(headers)
+        .enter().append("th")
+        .text(function (d) {
+          return d;
+        })
+        .attr("class",
+          function (d) {
+            if (d == "Title") {
+              return "table-title";
+            }
+            else {
+              return "";
+            }
+          });
+
+      function updatePanel(selectedPropertiesList) {
+        console.log(selectedPropertiesList)
+        header = table.selectAll("th")
+          .data(headers)
+          .enter().append("th")
+          .text(function (d) {
+            return d;
+          });
+
+
+        let rows = table.selectAll("tr").data(selectedPropertiesList)
+          .join(enter => enter.append("tr"),
+            update => update.selectAll("td").remove(),
+            exit => exit.remove());
+
+        rows.append("td").attr("class", "table-title").text(d => d[headers[0]]);
+        rows.append("td").text(d => d[headers[1]]);
+        rows.append("td").text(d => d[headers[2]]);
+        rows.append("td").text(d => d[headers[3]]);
+      }
 
     requestData();
   </script>
