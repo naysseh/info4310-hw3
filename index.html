@@ -62,51 +62,51 @@
                          .attr("class", "house")
                          .attr("cx", d => proj([d.Longitude, d.Latitude])[0])
                          .attr("cy", d => proj([d.Longitude, d.Latitude])[1])
-                         .attr("r", "2px")
+                         .attr("r", "3px")
                          .attr("note", d => d['Street Address'])
                          .style("fill", "navy") 
                          .on("click", function (event, d)  {
-                          console.log(d)
-                          var propetySelected = d3.select(this);
-                          if (propetySelected.classed("selectedProperty")) {
-                            propetySelected.classed("selectedProperty", false);
-                            indexP = selectedProperties.indexOf(d)
-                            if (selectedProperties.length == 1){
-                              selectedProperties = []
+                          console.log("click d", d);
+                          var propertySelected = d3.select(this);
+                          if (propertySelected.classed("selectedProperty")) {
+                            propertySelected.classed("selectedProperty", false);
+                            indexP = selectedProperties.indexOf(d);
+                            if (selectedProperties.length === 1){
+                              selectedProperties = [];
                             }
                             else{
                               selectedProperties = selectedProperties.splice(indexP, 1);
                             }
 
-                            propetySelected
+                            propertySelected
                                   .transition()
                                   .duration(500)
                                   .attr("stroke-width", "0px");
                           } else if (selectedProperties.length <2 && !selectedProperties.includes(d)){
-                            // console.log(propetySelected)
-                            console.log(propetySelected)
-                            selectedProperties.push(d)
-                            propetySelected.classed("selectedProperty", true);
-                            propetySelected
+                            // console.log(propertySelected)
+                            console.log(propertySelected);
+                            selectedProperties.push(d);
+                            propertySelected.classed("selectedProperty", true);
+                            propertySelected
                                 .transition()
                                 .duration(500)
                                 .attr("stroke", "#dba5ff")
                                 .attr("stroke-width", "2px");
                           }
-                          console.log(propetySelected.classed("selectedProperty"))
-                          console.log(selectedProperties)
-                          if (selectedProperties.length == 2){
-                            updatePanel(selectedProperties)
+                          console.log(propertySelected.classed("selectedProperty"));
+                          console.log(selectedProperties);
+                          if (selectedProperties.length === 2){
+                            updatePanel(selectedProperties);
                           }
                           else{
-                            updatePanel([])
+                            updatePanel([]);
                           }
                         })
     }
 
-    let headers = ["Street Address", "Neighborhood", "Sale Amount","Bathroom", "Bedrooms"]
+    let headers = ["Street Address", "Neighborhood", "Sale Amount","Bathroom", "Bedrooms"];
     let panelTitle = d3.select("#panel").append("h3");
-    panelTitle.text("Price Comparison")
+    panelTitle.text("Price Comparison");
     let table = d3.select("#panel").append("table");
     let header = table.selectAll("th")
       .data(headers)
