@@ -71,21 +71,8 @@
                           .on("click", function (event, d)  {
                             console.log("click d", d);
                             var propertySelected = d3.select(this);
-                            if (propertySelected.classed("selectedProperty")) {
-                              propertySelected.classed("selectedProperty", false);
-                              indexP = selectedProperties.indexOf(d);
-                              if (selectedProperties.length === 1){
-                                selectedProperties = [];
-                              }
-                              else{
-                                selectedProperties = selectedProperties.splice(indexP, 1);
-                              }
 
-                              propertySelected
-                                    .transition()
-                                    .duration(500)
-                                    .attr("stroke-width", "0px");
-                            } else if (selectedProperties.length <2 && !selectedProperties.includes(d)){
+                            if (selectedProperties.length <2 && !selectedProperties.includes(d)){
                               // console.log(propertySelected)
                               console.log(propertySelected);
                               selectedProperties.push(d);
@@ -150,7 +137,8 @@
         selectedProperties = [];
         console.log("reset properties array", selectedProperties);
         d3.selectAll("circle.house")
-          .attr("stroke-width", "0px");
+          .attr("stroke-width", "0px")
+          .classed("selectedProperty", false);
         updatePanel([]);
       }
     }
