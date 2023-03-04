@@ -85,11 +85,10 @@
                             }
                             console.log("is this point in selected array", propertySelected.classed("selectedProperty"));
                             console.log("selected properties", selectedProperties);
-                            if (selectedProperties.length === 2){
+                            updatePanel([]);
+
+                            if (selectedProperties.length == 2){
                               updatePanel(selectedProperties);
-                            }
-                            else{
-                              updatePanel([]);
                             }
                           });
 
