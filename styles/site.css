@@ -1,3 +1,8 @@
+html {
+  /* font-family: 'Sinhala MN', 'Helvetica', sans-serif; */
+  font-family: "Segoe UI", "Roboto" ,"Helvetica Neue", "Noto Sans", sans-serif;
+}
+
 .selectedProperty{
   stroke : #dba5ff
   stroke-width":3px"
@@ -50,4 +55,9 @@ td {
 .table-title {
   overflow-wrap: break-word;
   margin-right: 15px;
+}
+
+.map-legend {
+  display: flex;
+  flex-direction: column;
 }

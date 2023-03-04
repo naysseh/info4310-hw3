@@ -5,6 +5,8 @@
   <title>Pittsburgh Zillow Properties</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://d3js.org/topojson.v3.min.js"></script>
+  <script src="scripts/drawlegend.js"></script>
+
   <link rel="stylesheet" type="text/css" href="styles/site.css">
 </head>
 
@@ -14,7 +16,11 @@
     </div>
 
     <div class = "orientation">   
-      <svg id="map" height="500" width="500"></svg>
+
+      <div class="map-legend">  
+        <svg id="map" height="500" width="500"></svg>
+        <svg id="barLegend" height="50" width="500"></svg>
+      </div>
       <div class = "side-panel"> 
         <!-- <button class = "button" onclick= "reset()" type="button">Reset</button> -->
         <button class = "button" id="resetButton" type="button">Reset</button>
@@ -27,6 +33,7 @@
 
   <script>
     const map = d3.select("svg#map");
+    const bar = d3.select("svg#barLegend");
 
     const requestData = async function () {
       const pittsburghMap = await d3.json("data/pittsburgh.json");
@@ -45,6 +52,32 @@
       console.log(neighborhoods);
       var proj = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoods);
       var path = d3.geoPath().projection(proj);
+    
+      //create pricing bins
+      //this can probably be used for the histogram later too!
+      let prices = [];
+      zillowData.forEach(d => {
+        prices.push(d['Sale Amount']);
+      });
+
+      let pricingExtent = d3.extent(prices);
+      
+      let histogram = d3.histogram()
+                        .domain(pricingExtent)
+                        .thresholds(6); 
+      let histogramCounts = histogram(prices);
+
+      // making a color scale that will be used for the legend
+      let colorScheme = d3.schemeYlGnBu[9];
+      let colorScale = d3.scaleQuantize()
+                         .domain(pricingExtent)
+                         .range(colorScheme.slice(4, 9));
+
+
+      // draw legend using external function found in /scripts/drawlegend.js by Prof. Jeff Rz
+      drawLegend("svg#barLegend", colorScale);
+
+
 
       viewport.selectAll("path.neighborhood")
               .data(neighborhoods.features)
@@ -67,7 +100,7 @@
                           .attr("cy", d => proj([d.Longitude, d.Latitude])[1])
                           .attr("r", "3px")
                           .attr("note", d => d['Street Address'])
-                          .style("fill", "navy") 
+                          .style("fill", d => colorScale(d['Sale Amount'])) 
                           .on("click", function (event, d)  {
                             console.log("click d", d);
                             var propertySelected = d3.select(this);
