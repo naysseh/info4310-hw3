@@ -203,7 +203,7 @@
           .attr("class", "house")
           .attr("cx", d => proj([d.Longitude, d.Latitude])[0])
           .attr("cy", d => proj([d.Longitude, d.Latitude])[1])
-          .attr("r", "4px")
+          .attr("r", "3.5px")
           .attr("note", d => d['Street Address'])
           .style("fill", d => colorScale(d['Sale Amount']))
           .on("click", function (event, d) {
@@ -237,7 +237,7 @@
           function zoomTransform({transform}) { //unwrap the event into just the transform because we know what the variable looks like
             viewport.attr("transform", transform.toString());
             // neighborhoodMesh.style("stroke-width", 1/transform.k);
-            houses.attr("r", 4/transform.k);
+            houses.attr("r", 3.5/transform.k);
           }
 
           map.call(zoom);
