@@ -1,11 +1,10 @@
 html {
   /* font-family: 'Sinhala MN', 'Helvetica', sans-serif; */
-  font-family: "Segoe UI", "Roboto" ,"Helvetica Neue", "Noto Sans", sans-serif;
+  font-family: "Segoe UI", "Roboto", "Helvetica Neue", "Noto Sans", sans-serif;
 }
 
-.selectedProperty{
-  stroke : #dba5ff
-  stroke-width":3px"
+.selectedProperty {
+  stroke: #dba5ff stroke-width":3px"
 }
 
 .orientation {
@@ -19,7 +18,8 @@ html {
 }
 
 .button {
-  background-color: #e7e7e7; /* Green */
+  background-color: #e7e7e7;
+  /* Green */
   border: none;
   color: black;
   padding: 15px 32px;
@@ -60,4 +60,20 @@ td {
 .map-legend {
   display: flex;
   flex-direction: column;
+}
+
+.property-buttons {
+  /* border: 2px solid gray; */
+  border: none;
+  background-color: #e7e7e7;
+  padding: 7px;
+  margin: 3px;
+}
+
+.clicked {
+  background-color: lightblue;
+}
+
+.property-buttons:hover {
+  background-color: lightblue;
 }

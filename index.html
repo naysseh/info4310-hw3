@@ -18,6 +18,7 @@
   <div class="orientation">
 
     <div class="map-legend">
+      <div id="property-button"></div>
       <div id="controls"></div>
       <svg id="map" height="500" width="500"></svg>
       <svg id="barLegend" height="50" width="500"></svg>
@@ -54,6 +55,7 @@
       var proj = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoods);
       var path = d3.geoPath().projection(proj);
 
+      let property = "All";
       //create pricing bins
       //this can probably be used for the histogram later too!
       let prices = [];
@@ -151,12 +153,12 @@
             filters[attribute] = filterFunc;
             console.log(filters);
 
-            updateData(data);
+            updateData(data, property);
           }
           else {
             let filterFunc = d => true;
             filters[attribute] = filterFunc;
-            updateData(data);
+            updateData(data, property);
           }
         }
         canvas.append("g").attr("class", "brush").call(brush);
@@ -175,8 +177,23 @@
       let selectedProperties = [];
       let resetButton = d3.select("#resetButton").on("click", function () { reset() });
 
-      function updateData(data) {
+      function updateData(data, property) {
         data = data.filter(d => pointPassesFilters(d));
+
+        let filteredData = [];
+        if (property != "All") {
+          data.forEach((d, i) => {
+            if (d["Property Type"] === property) {
+              filteredData.push(d);
+            }
+          });
+        }
+        else {
+          filteredData = data;
+        }
+
+        data = filteredData;
+
         //plot points on the map 
         let houses = viewport.selectAll("circle.house")
           .data(data)
@@ -211,6 +228,33 @@
             }
           });
       }
+
+      properties = ["All", "SingleFamily", "Townhouse", "Condominium", "MultiFamily2To4"];
+      propertyLabels = ["All", "Single Family", "Townhouse", "Condominium", "Multiple Families"];
+
+      ct = 0;
+      properties.forEach(d => {
+        d3.select("div#property-button")
+          .append("button")
+          .text(propertyLabels[ct])
+          .attr("class", "property-buttons")
+          .attr("id", d)
+          .on("click", function () {
+            clicked = document.getElementsByClassName("clicked");
+            clicked[0].classList.remove("clicked");
+            event.target.classList.add("clicked");
+
+            property = d;
+            updateData(data, property);
+          })
+        if (d == 'All') {
+          d3.selectAll('.property-buttons')
+            .attr("class", "property-buttons clicked")
+        };
+
+        ct++;
+      });
+
 
 
       let headers = ["Street Address", "Neighborhood", "Sale Amount", "Bathroom", "Bedrooms"];
@@ -260,7 +304,7 @@
           .classed("selectedProperty", false);
         updatePanel([]);
       }
-      updateData(data);
+      updateData(data, property);
 
       // creating sliders for filtering
       let controls = d3.select("#controls");
