@@ -11,24 +11,25 @@
 </head>
 
 <body>
-    <div class="title">
-      <h1>Pittsburgh Zillow Properties</h1>
+  <div class="title">
+    <h1>Pittsburgh Zillow Properties</h1>
+  </div>
+
+  <div class="orientation">
+
+    <div class="map-legend">
+      <div id="controls"></div>
+      <svg id="map" height="500" width="500"></svg>
+      <svg id="barLegend" height="50" width="500"></svg>
     </div>
-
-    <div class = "orientation">   
-
-      <div class="map-legend">  
-        <svg id="map" height="500" width="500"></svg>
-        <svg id="barLegend" height="50" width="500"></svg>
-      </div>
-      <div class = "side-panel"> 
-        <!-- <button class = "button" onclick= "reset()" type="button">Reset</button> -->
-        <button class = "button" id="resetButton" type="button">Reset</button>
+    <div class="side-panel">
+      <!-- <button class = "button" onclick= "reset()" type="button">Reset</button> -->
+      <button class="button" id="resetButton" type="button">Reset</button>
 
 
-        <div id="panel"></div>
-      </div>
+      <div id="panel"></div>
     </div>
+  </div>
 
 
   <script>
@@ -38,8 +39,8 @@
     const requestData = async function () {
       const pittsburghMap = await d3.json("data/pittsburgh.json");
 
-      const zillowData = await d3.csv("data/zillow-filtered.csv", d3.autoType);
-      console.log(zillowData);
+      const data = await d3.csv("data/zillow-filtered.csv", d3.autoType);
+      console.log(data);
       const mapHeight = map.attr("height");
       const mapWidth = map.attr("width");
 
@@ -52,99 +53,185 @@
       console.log(neighborhoods);
       var proj = d3.geoMercator().fitSize([mapWidth, mapHeight], neighborhoods);
       var path = d3.geoPath().projection(proj);
-    
+
       //create pricing bins
       //this can probably be used for the histogram later too!
       let prices = [];
-      zillowData.forEach(d => {
+      data.forEach(d => {
         prices.push(d['Sale Amount']);
       });
 
       let pricingExtent = d3.extent(prices);
-      
+
       let histogram = d3.histogram()
-                        .domain(pricingExtent)
-                        .thresholds(6); 
+        .domain(pricingExtent)
+        .thresholds(6);
       let histogramCounts = histogram(prices);
 
       // making a color scale that will be used for the legend
       let colorScheme = d3.schemeYlGnBu[9];
       let colorScale = d3.scaleQuantize()
-                         .domain(pricingExtent)
-                         .range(colorScheme.slice(4, 9));
+        .domain(pricingExtent)
+        .range(colorScheme.slice(4, 9));
 
 
       // draw legend using external function found in /scripts/drawlegend.js by Prof. Jeff Rz
       drawLegend("svg#barLegend", colorScale);
 
+      // ******** EXTERNAL FUNCTION START: makeSlider, pointPassesFilters ********
+      // Credit to Prof. Jeff Rzeszotarski, taken from Lecture on Oct 31, 2022 (INFO 3300)
+      // https://github.com/jeffrz/info3300-fa2022/blob/main/homefinder/static/index.html
+      // Changes made to suit our data structures and necessary filtering
+      var filters = {};
 
+      function pointPassesFilters(point) {
+        let stillPassed = true;
+        Object.values(filters).forEach(filterFunc => {
+          stillPassed = filterFunc(point) && stillPassed;
+        });
+        return stillPassed;
+      }
+
+      function makeSlider(container, label, attribute, sliderWidth, sliderHeight) {
+        let values = data.map(d => d[attribute]);
+
+        let minMax = d3.extent(values);
+        let xScale = d3.scaleLinear().domain(minMax)
+          .range([10, sliderWidth - 10]);
+        let xAxis = d3.axisBottom(xScale).tickFormat(d3.format(".2s"));
+
+        let wrapper = container.append("div").attr("class", "control");
+        wrapper.append("div").text(label).style("font-size", "13px").style("margin-bottom", "5px");
+        let canvas = wrapper.append("svg").attr("width", sliderWidth)
+          .attr("height", sliderHeight + 20)
+          .attr("attribute", attribute);
+        let areaLayer = canvas.append("g");
+        canvas.append("g").attr("transform", `translate(0,${sliderHeight})`)
+          .call(xAxis);
+
+        let numBins = 10;
+
+        let histoGen = d3.histogram().domain(minMax)
+          .thresholds(numBins);
+        let counts = histoGen(values);
+        console.log(counts);
+
+        counts.unshift({
+          x0: 0,
+          x1: counts[0].x0,
+          length: counts[0].length
+        });
+
+        let yScale = d3.scaleLinear().domain(d3.extent(counts, d => d.length))
+          .range([sliderHeight, 4]);
+
+        let area = d3.area().x(d => xScale(d.x1))
+          .y0(yScale(0))
+          .y1(d => yScale(d.length))
+          .curve(d3.curveNatural);
+
+        areaLayer.append("path").datum(counts)
+          .attr("class", "area")
+          .attr("d", area)
+          .style("fill", "#4E79A7");
+
+        let filterFunc = d => true;
+        filters[attribute] = filterFunc;
+
+        var brush = d3.brushX().extent([[10, 0], [sliderWidth - 10, sliderHeight]])
+          .on("end", brushMoved);
+
+        function brushMoved(event) {
+          if (event.selection !== null) {
+
+            let start = xScale.invert(event.selection[0]);
+            let end = xScale.invert(event.selection[1]);
+
+            let filterFunc = d => d[attribute] >= start && d[attribute] <= end;
+            filters[attribute] = filterFunc;
+            console.log(filters);
+
+            updateData(data);
+          }
+          else {
+            let filterFunc = d => true;
+            filters[attribute] = filterFunc;
+            updateData(data);
+          }
+        }
+        canvas.append("g").attr("class", "brush").call(brush);
+      }
+      // ******** EXTERNAL FUNCTION END: makeSlider, pointPassesFilters ********
 
       viewport.selectAll("path.neighborhood")
-              .data(neighborhoods.features)
-              .join("path")
-              .attr("class", "neighborhood")
-              .style("fill", "lightblue")
-              .style("stroke", "black")
-              .style("stroke-width", "1px")
-              .attr("d", path);
+        .data(neighborhoods.features)
+        .join("path")
+        .attr("class", "neighborhood")
+        .style("fill", "lightblue")
+        .style("stroke", "black")
+        .style("stroke-width", "1px")
+        .attr("d", path);
 
       let selectedProperties = [];
-      let resetButton = d3.select("#resetButton").on("click", function() {reset()});
+      let resetButton = d3.select("#resetButton").on("click", function () { reset() });
 
-      //plot points on the map 
-      let houses = viewport.selectAll("circle.house")
-                          .data(zillowData)
-                          .join("circle")
-                          .attr("class", "house")
-                          .attr("cx", d => proj([d.Longitude, d.Latitude])[0])
-                          .attr("cy", d => proj([d.Longitude, d.Latitude])[1])
-                          .attr("r", "3px")
-                          .attr("note", d => d['Street Address'])
-                          .style("fill", d => colorScale(d['Sale Amount'])) 
-                          .on("click", function (event, d)  {
-                            console.log("click d", d);
-                            var propertySelected = d3.select(this);
+      function updateData(data) {
+        data = data.filter(d => pointPassesFilters(d));
+        //plot points on the map 
+        let houses = viewport.selectAll("circle.house")
+          .data(data)
+          .join("circle")
+          .attr("class", "house")
+          .attr("cx", d => proj([d.Longitude, d.Latitude])[0])
+          .attr("cy", d => proj([d.Longitude, d.Latitude])[1])
+          .attr("r", "3px")
+          .attr("note", d => d['Street Address'])
+          .style("fill", d => colorScale(d['Sale Amount']))
+          .on("click", function (event, d) {
+            console.log("click d", d);
+            var propertySelected = d3.select(this);
 
-                            if (selectedProperties.length <2 && !selectedProperties.includes(d)){
-                              // console.log(propertySelected)
-                              console.log(propertySelected);
-                              selectedProperties.push(d);
-                              propertySelected.classed("selectedProperty", true);
-                              propertySelected
-                                  .transition()
-                                  .duration(500)
-                                  .attr("stroke", "#dba5ff")
-                                  .attr("stroke-width", "2px");
-                            }
-                            console.log("is this point in selected array", propertySelected.classed("selectedProperty"));
-                            console.log("selected properties", selectedProperties);
-                            updatePanel([]);
+            if (selectedProperties.length < 2 && !selectedProperties.includes(d)) {
+              // console.log(propertySelected)
+              console.log(propertySelected);
+              selectedProperties.push(d);
+              propertySelected.classed("selectedProperty", true);
+              propertySelected
+                .transition()
+                .duration(500)
+                .attr("stroke", "#dba5ff")
+                .attr("stroke-width", "2px");
+            }
+            console.log("is this point in selected array", propertySelected.classed("selectedProperty"));
+            console.log("selected properties", selectedProperties);
+            updatePanel([]);
 
-                            if (selectedProperties.length == 2){
-                              updatePanel(selectedProperties);
-                            }
-                          });
+            if (selectedProperties.length == 2) {
+              updatePanel(selectedProperties);
+            }
+          });
+      }
 
 
-      let headers = ["Street Address", "Neighborhood", "Sale Amount","Bathroom", "Bedrooms"];
+      let headers = ["Street Address", "Neighborhood", "Sale Amount", "Bathroom", "Bedrooms"];
       let panelTitle = d3.select("#panel").append("h3");
       panelTitle.text("Price Comparison");
       let table = d3.select("#panel").append("table");
       let header = table.selectAll("th")
-                        .data(headers)
-                        .enter().append("th")
-                        .text(function (d) {
-                          return d;
-                        })
-                        .attr("class",
-                          function (d) {
-                            if (d === "Title") {
-                              return "table-title";
-                            }
-                            else {
-                              return "";
-                            }
-                        });
+        .data(headers)
+        .enter().append("th")
+        .text(function (d) {
+          return d;
+        })
+        .attr("class",
+          function (d) {
+            if (d === "Title") {
+              return "table-title";
+            }
+            else {
+              return "";
+            }
+          });
 
       function updatePanel(selectedPropertiesList) {
         console.log(selectedPropertiesList)
@@ -160,10 +247,10 @@
             update => update.selectAll("td").remove(),
             exit => exit.remove());
 
-        for (var i = 0; i< headers.length; i++){
+        for (var i = 0; i < headers.length; i++) {
           rows.append("td").text(d => d[headers[i]]);
         }
-      }    
+      }
 
       function reset() {
         selectedProperties = [];
@@ -173,6 +260,11 @@
           .classed("selectedProperty", false);
         updatePanel([]);
       }
+      updateData(data);
+
+      // creating sliders for filtering
+      let controls = d3.select("#controls");
+      makeSlider(controls, "Sale Price ($): ", "Sale Amount", 300, 30);
     }
 
     requestData();
