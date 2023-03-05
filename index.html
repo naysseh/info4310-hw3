@@ -76,13 +76,15 @@
         .domain(pricingExtent)
         .range(colorScheme.slice(4, 9));
 
-      // draw legend using external function found in /scripts/drawlegend.js by Prof. Jeff Rz
+      // ******* EXTERNAL FUNCTION *****: drawLegend by Professor Jeff Rzeszotarski, taken from Lecture on Oct 3, 2022 (INFO 3300). Placed in a separate file and found in /scripts/drawlegend.js
+      // https://github.com/jeffrz/info3300-fa2022/blob/main/notes/22.10.03.notes.htm 
       drawLegend("svg#barLegend", colorScale);
 
       // ******** EXTERNAL FUNCTION START: makeSlider, pointPassesFilters ********
       // Credit to Prof. Jeff Rzeszotarski, taken from Lecture on Oct 31, 2022 (INFO 3300)
       // https://github.com/jeffrz/info3300-fa2022/blob/main/homefinder/static/index.html
-      // Changes made to suit our data structures and necessary filtering
+      // Changes made to suit our data structures (the data dictionary from our CSV) and our SVG/visualization format.
+
       var filters = {};
 
       function pointPassesFilters(point) {
@@ -191,12 +193,9 @@
         else {
           filteredData = data;
         }
-
         data = filteredData;
 
-        
-
-        //plot points on the map 
+        //Plot points on the map 
         let houses = viewport.selectAll("circle.house")
           .data(data)
           .join("circle")
@@ -211,8 +210,6 @@
             var propertySelected = d3.select(this);
 
             if (selectedProperties.length < 2 && !selectedProperties.includes(d)) {
-              // console.log(propertySelected)
-              console.log(propertySelected);
               selectedProperties.push(d);
               propertySelected.classed("selectedProperty", true);
               propertySelected
@@ -221,8 +218,6 @@
                 .attr("stroke", "#dba5ff")
                 .attr("stroke-width", "2px");
             }
-            console.log("is this point in selected array", propertySelected.classed("selectedProperty"));
-            console.log("selected properties", selectedProperties);
             updatePanel([]);
 
             if (selectedProperties.length == 2) {
@@ -230,14 +225,15 @@
             }
           });
 
+          //Create zoom functionality and then call it only on the map
           var zoom = d3.zoom()
                    .scaleExtent([1,10])
                    .on("zoom", zoomTransform);
 
-          function zoomTransform({transform}) { //unwrap the event into just the transform because we know what the variable looks like
+          function zoomTransform({transform}) { //unwrap the event into just the transform because we know what the event variable looks like
             viewport.attr("transform", transform.toString());
             // neighborhoodMesh.style("stroke-width", 1/transform.k);
-            houses.attr("r", 3.5/transform.k);
+            // houses.attr("r", 3.5/transform.k);
           }
 
           map.call(zoom);
@@ -268,8 +264,6 @@
 
         ct++;
       });
-
-
 
       let headers = ["Street Address", "Neighborhood", "Sale Amount", "Bathroom", "Bedrooms"];
       let panelTitle = d3.select("#panel").append("h3");
@@ -320,7 +314,7 @@
       }
       updateData(data, property);
 
-      // creating sliders for filtering
+      // Creating sliders for filtering
       let controls = d3.select("#controls");
       makeSlider(controls, "Sale Price ($): ", "Sale Amount", 300, 30);
     }

@@ -3,15 +3,26 @@
   //  Takes in an SVG element selector <legendSelector> and a d3 color scale <legendColorScale>
   //
   // Usage example: drawLegend("#legendID", grossIncomeColorScale)
+
+
+
+  // All credit given to Prof. Rzeszotarski! Thank you!
+
+  // ***CHANGE***
+  // Any changes we've made are marked with a ***CHANGE*** and then explained after that marker. We mainly tweaked small numbers and removed the different cases for scales (as we're only using quantile).
+
+
   function drawLegend(legendSelector, legendColorScale) {
     
     // This code should adapt to a variety of different kinds of color scales
     //  Credit Prof. Rz if you are basing a legend on this structure, and note PERFORMANCE CONSIDERATIONS
     
-    // Shrink legend bar by 5 px inwards from sides of SVG
-    const offsets = { width: 10,
+    // ***CHANGE***: changed the width that the bar shrinks in from the SVG from 10 to 30
+    // Shrink legend bar by 15 px inwards from sides of SVG
+    const offsets = { width: 30,
                       top: 2,
                       bottom: 24 }; 
+
     // Number of integer 'pixel steps' to draw when showing continuous scales
     //    Warning, not using a canvas element so lots of rect tags will be created for low stepSize, causing issues with performance -- keep this large
     const stepSize = 4; 
@@ -39,10 +50,9 @@
                     .attr("class", "legend colorbar")
                     .attr("transform", `translate(${offsets.width},${offsets.top})`)
     
-    // ***deleted nominal/continuous scale option***
+    // ***CHANGE***: deleted nominal/continuous scale cases, as we're only using a quantile scale (and therefore we don't need an entire if statement - we can just execute on the case we need, which is a scale with quantiles).
 
-    // Check if we're using a binning scale - if so, we make blocks of color
-    if (legendColorScale.hasOwnProperty('thresholds') || legendColorScale.hasOwnProperty('quantiles')) {
+    // if (legendColorScale.hasOwnProperty('thresholds') || legendColorScale.hasOwnProperty('quantiles')) {
       // Get the thresholds
       let thresholds = [];
       if (legendColorScale.hasOwnProperty('thresholds')) { thresholds = legendColorScale.thresholds() }
@@ -67,7 +77,7 @@
            .attr("height", barHeight)
            .style("fill", legendColorScale( (dataStart + dataEnd) / 2.0 ) ); 
       }
-    }
+    // }
 
     
     // Finally, draw legend labels
