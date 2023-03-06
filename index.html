@@ -24,14 +24,23 @@
       <svg id="barLegend" height="50" width="500"></svg>
     </div>
     <div class="side-panel">
-      <!-- <button class = "button" onclick= "reset()" type="button">Reset</button> -->
+      <div class = "info">
+        <div>
+          This visualization displays shows properties in Pittsburgh available 
+          to buy. The circles on the map represent different properties. 
+          The color legend under the map represent what price range the 
+          property is in. <br><br>
+
+          <span class="hl">Click </span>on the tabs of property types to display that property on the map. <br>
+          <span class="hl">Click </span>on two circles on the map to compare property information. <br>
+          <span class="hl">Select</span> or <span class="hl">drag</span> an area within the sliders to adjust viewable data.<br>
+        </div>
+        
+      </div>
       <button class="button" id="resetButton" type="button">Reset</button>
-
-
       <div id="panel"></div>
     </div>
   </div>
-
 
   <script>
     const map = d3.select("svg#map");
@@ -146,7 +155,6 @@
 
         function brushMoved(event) {
           if (event.selection !== null) {
-
             let start = xScale.invert(event.selection[0]);
             let end = xScale.invert(event.selection[1]);
 
@@ -181,7 +189,6 @@
       function updateData(data, property) {
         data = data.filter(d => pointPassesFilters(d));
 
-
         let filteredData = [];
         if (property != "All") {
           data.forEach((d, i) => {
@@ -208,7 +215,7 @@
           .on("click", function (event, d) {
             console.log("click d", d);
             var propertySelected = d3.select(this);
-
+            // a property will be selected if 
             if (selectedProperties.length < 2 && !selectedProperties.includes(d)) {
               selectedProperties.push(d);
               propertySelected.classed("selectedProperty", true);

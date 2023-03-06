@@ -17,6 +17,16 @@ html {
   flex-direction: column;
 }
 
+.info{
+  font-size: 13px;
+  align-items: flex-start;
+}
+
+.hl {
+  color: #1e60a7;
+  font-weight: bold;
+}
+
 .button {
   background-color: #e7e7e7;
   /* Green */
