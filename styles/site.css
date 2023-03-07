@@ -3,8 +3,13 @@ html {
   font-family: "Segoe UI", "Roboto", "Helvetica Neue", "Noto Sans", sans-serif;
 }
 
+body {
+  margin-left: 20px;
+}
+
 .selectedProperty {
-  stroke: #dba5ff stroke-width":3px"
+  stroke: #dba5ff ;
+  stroke-width: 3px;
 }
 
 .orientation {
@@ -17,9 +22,19 @@ html {
   flex-direction: column;
 }
 
-.info{
+#controls {
+  margin: 10px 0 5px 0;
+}
+
+.info {
   font-size: 13px;
   align-items: flex-start;
+  margin: 0 10px 10px 20px;
+  padding: 10px;
+  width: 520px;
+  background-color: lightblue;
+  border-radius: 15px;
+  border: 1px #3b3b3b solid;
 }
 
 .hl {
@@ -29,7 +44,6 @@ html {
 
 .button {
   background-color: #e7e7e7;
-  /* Green */
   border: none;
   color: black;
   padding: 15px 32px;
@@ -37,6 +51,23 @@ html {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
+}
+
+#reset-panel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-right: 80px;
+}
+
+#resetButton {
+  padding: 0px 20px 0px 20px;
+  margin: 10px 0px 10px 0px;
+  border-radius: 15px;
+}
+
+#resetButton:hover {
+  background-color: lightblue;
 }
 
 #panel {
@@ -72,12 +103,23 @@ td {
   flex-direction: column;
 }
 
+#legend-label {
+  display: flex;
+  flex-direction: column;
+}
+
+#price-label {
+  margin: 0px 0px 3px 30px;
+  font-weight: bold;
+  font-size: 15px;
+}
+
 .property-buttons {
-  /* border: 2px solid gray; */
   border: none;
   background-color: #e7e7e7;
   padding: 7px;
   margin: 3px;
+  border-radius: 10px;
 }
 
 .clicked {
@@ -87,3 +129,4 @@ td {
 .property-buttons:hover {
   background-color: lightblue;
 }
+

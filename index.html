@@ -20,16 +20,17 @@
     <div class="map-legend">
       <div id="property-button"></div>
       <div id="controls"></div>
-      <svg id="map" height="500" width="500"></svg>
-      <svg id="barLegend" height="50" width="500"></svg>
+      <svg id="map" height="450" width="500"></svg>
+      <div id="legend-label">
+        <p id="price-label">Price ($):</p>
+        <svg id="barLegend" height="50" width="500"></svg>
+      </div>  
     </div>
     <div class="side-panel">
-      <div class = "info">
+      <div class="info">
         <div>
           This visualization displays shows properties in Pittsburgh available 
-          to buy. The circles on the map represent different properties. 
-          The color legend under the map represent what price range the 
-          property is in. <br><br>
+          to buy. The circles on the map represent different properties: zoom in for more detail.  <br><br>
 
           <span class="hl">Click </span>on the tabs of property types to display that property on the map. <br>
           <span class="hl">Click </span>on two circles on the map to compare property information. <br>
@@ -37,8 +38,14 @@
         </div>
         
       </div>
-      <button class="button" id="resetButton" type="button">Reset</button>
-      <div id="panel"></div>
+
+      <div id="panel">
+        <div id="reset-panel">
+          <h3>Price Comparison</h3>
+          <button class="button" id="resetButton" type="button">Reset</button>
+        </div>
+      </div>
+    
     </div>
   </div>
 
@@ -113,7 +120,7 @@
         let xAxis = d3.axisBottom(xScale).tickFormat(d3.format(".2s"));
 
         let wrapper = container.append("div").attr("class", "control");
-        wrapper.append("div").text(label).style("font-size", "13px").style("margin-bottom", "5px");
+        wrapper.append("div").text(label).style("font-size", "13px").style("margin", "0px 0px 5px 10px");
         let canvas = wrapper.append("svg").attr("width", sliderWidth)
           .attr("height", sliderHeight + 20)
           .attr("attribute", attribute);
@@ -273,8 +280,6 @@
       });
 
       let headers = ["Street Address", "Neighborhood", "Sale Amount", "Bathroom", "Bedrooms"];
-      let panelTitle = d3.select("#panel").append("h3");
-      panelTitle.text("Price Comparison");
       let table = d3.select("#panel").append("table");
       let header = table.selectAll("th")
         .data(headers)

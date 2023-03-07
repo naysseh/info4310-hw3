@@ -41,7 +41,9 @@ function drawLegend(legendSelector, legendColorScale) {
       legendMinMax[1] + minMaxExtension,
     ])
     .range([0, legendBarWidth]);
-  let barAxis = d3.axisBottom(barScale);
+
+    // ***CHANGE***: added in formatting on the x axis to round the larger thousands/millions into shorthand
+  let barAxis = d3.axisBottom(barScale).tickFormat(d3.format(".2s"));
 
   // Place for bar slices to live
   let bar = legend
