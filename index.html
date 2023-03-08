@@ -254,6 +254,23 @@
           }
         });
 
+        let bubbles = viewport.selectAll("circle.house")
+        bubbles.on("mouseover", function (event, d) {
+          d3.select(this)
+              .transition()
+              .duration(500)
+              .attr("stroke", "#dba5ff")
+              .attr("stroke-width", "2px");
+
+          updatePanel([d]);
+        });
+        bubbles.on("mouseout", function (event, d) {
+          d3.select(this)
+            .transition().duration(200)
+            .attr("stroke-width", "0");
+          updatePanel({});
+        });
+
       //Create zoom functionality and then call it only on the map
       var zoom = d3.zoom()
         .scaleExtent([1, 10])
