@@ -49,7 +49,7 @@ h1 {
 }
 
 #controls {
-  margin: 10px 0 5px 0;
+  margin: 10px 0 15px 0;
 }
 
 .hl {
@@ -121,6 +121,12 @@ h1 {
   margin-bottom: 15px;
 }
 
+.instruct {
+  color: #1e60a7;
+  font-weight: bold;
+  font-size: 12px;
+}
+
 #reset-panel {
   display: flex;
   flex-direction: row;
@@ -150,7 +156,7 @@ th {
   border-bottom: 1px solid #dedcdc;
   text-align: left;
   font-size: 14px;
-  width: 100px;
+  padding-right: 15px;
   padding-top: 5px;
   padding-bottom: 5px;
 }
@@ -160,6 +166,5 @@ td {
 }
 
 .table-title {
-  overflow-wrap: break-word;
-  margin-right: 15px;
+  width: 100px;
 }

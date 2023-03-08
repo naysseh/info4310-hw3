@@ -17,7 +17,7 @@
 
   <div class="main">
     <div class="map">
-      <svg id="map" height="600" width="800"></svg>
+      <svg id="map" height="600" width="700"></svg>
 
       <div id="legend-label">
         <p id="price-label">Sale Price ($):</p>
@@ -31,8 +31,10 @@
         This visualization displays shows properties in Pittsburgh available
         to buy. The circles on the map represent different properties: zoom in for more detail. <br><br>
 
-        <span class="hl">Click </span>on the tabs of property types to display that property on the map. <br>
+        <span class="hl">Scroll </span>over the map to zoom in and out. <br>
         <span class="hl">Click </span>on two circles on the map to compare property information. <br>
+        <span class="hl">Click </span>the reset button to begin a new comparison. <br>
+        <span class="hl">Click </span>on the property type buttons to adjust viewable data. <br>
         <span class="hl">Select</span> or <span class="hl">drag</span> an area within the sliders to adjust viewable
         data.<br>
       </div>
@@ -44,8 +46,15 @@
         <div id="controls"></div>
 
         <div id="panel">
+          <!-- <div class="instruct">
+            *Select two properties on the map for comparison.
+          </div>
+          <div class="instruct">
+            *Use the reset button to clear selections and begin a new
+            comparison.
+          </div> -->
           <div id="reset-panel">
-            <h3>Price Comparison</h3>
+            <h3>Property Comparison</h3>
 
             <button class="button" id="resetButton" type="button">Reset Table</button>
           </div>
@@ -286,7 +295,7 @@
     });
 
     let headers = ["Street Address", "Neighborhood", "Sale Amount", "Bathroom", "Bedrooms"];
-    let headerLabels = ["Address", "Neighborhood", "Sale Price ($)", "# Bathrooms", "# Bedrooms"];
+    let headerLabels = ["Address", "Neighborhood", "Sale Price ($)", "Bathrooms", "Bedrooms"];
     let table = d3.select("#panel").append("table");
     let header = table.selectAll("th")
       .data(headerLabels)
@@ -296,7 +305,7 @@
       })
       .attr("class",
         function (d) {
-          if (d === "Title") {
+          if (d === "Address" || d === "Neighborhood") {
             return "table-title";
           }
           else {
