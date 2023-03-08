@@ -254,22 +254,22 @@
           }
         });
 
-        let bubbles = viewport.selectAll("circle.house")
-        bubbles.on("mouseover", function (event, d) {
-          d3.select(this)
-              .transition()
-              .duration(500)
-              .attr("stroke", "#dba5ff")
-              .attr("stroke-width", "2px");
+      let bubbles = viewport.selectAll("circle.house")
+      bubbles.on("mouseover", function (event, d) {
+        d3.select(this)
+          .transition()
+          .duration(500)
+          .attr("stroke", "#dba5ff")
+          .attr("stroke-width", "2px");
 
-          updatePanel([d]);
-        });
-        bubbles.on("mouseout", function (event, d) {
-          d3.select(this)
-            .transition().duration(200)
-            .attr("stroke-width", "0");
-          updatePanel({});
-        });
+        updatePanel([d]);
+      });
+      bubbles.on("mouseout", function (event, d) {
+        d3.select(this)
+          .transition().duration(200)
+          .attr("stroke-width", "0");
+        updatePanel({});
+      });
 
       //Create zoom functionality and then call it only on the map
       var zoom = d3.zoom()
@@ -312,7 +312,7 @@
     });
 
     let headers = ["Street Address", "Neighborhood", "Sale Amount", "Bathroom", "Bedrooms", "Property Type"];
-    let headerLabels = ["Address", "Neighborhood", "Sale Price ($)", "Bathrooms", "Bedrooms", "Type"];
+    let headerLabels = ["Address", "Neighborhood", "Sale Price ($)", "Bath", "Bed", "Type"];
     let table = d3.select("#panel").append("table");
     let header = table.selectAll("th")
       .data(headerLabels)
@@ -322,7 +322,7 @@
       })
       .attr("class",
         function (d) {
-          if (d === "Address" || d === "Neighborhood") {
+          if (d === "Address" || d === "Neighborhood" || d == "Type") {
             return "table-title";
           }
           else {
@@ -343,14 +343,14 @@
           update => update.selectAll("td").remove(),
           exit => exit.remove());
 
-      let formatFunc = d3.format(".2s");    
+      let formatFunc = d3.format(".2s");
       for (var i = 0; i < headers.length; i++) {
         // rows.append("td").text(d => 
         // d[headers[i]]);
         rows.append("td").text(function (d) {
           if (i === 2) {
             return formatFunc(d[headers[i]]);
-            return 
+            return
           } else {
             return d[headers[i]];
           }
