@@ -8,7 +8,7 @@ body {
 }
 
 .selectedProperty {
-  stroke: #dba5ff ;
+  stroke: #dba5ff;
   stroke-width: 3px;
 }
 
@@ -30,13 +30,16 @@ body {
 .info {
   font-size: 13px;
   align-items: flex-start;
-  margin: 0 10px 10px 20px;
+  /* margin: 0 10px 10px 20px; */
   padding: 10px;
-  width: 520px;
+  /* width: 300px; */
   background-color: #cadfe6;
   /* background-color: lightblue; */
-  border-radius: 12px;
-  border: 1px #3b3b3b solid;
+  border-radius: 10px;
+  /* border: 1px #3b3b3b solid; */
+  margin-bottom: 10px;
+  width: 550px;
+  margin-left: 10px;
 }
 
 .hl {
@@ -59,13 +62,15 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-right: 80px;
+  margin-right: 10px;
 }
 
 #resetButton {
   padding: 0px 20px 0px 20px;
   margin: 15px 0px 15px 0px;
   border-radius: 10px;
+  /* align-self: flex-end; */
+  font-size: 13px;
 }
 
 #resetButton:hover {
@@ -73,12 +78,12 @@ body {
 }
 
 #panel {
-  width: 600px;
+  /* width: 600px; */
   height: 450px;
-  margin-left: 5px;
+  /* margin-left: 5px;
   margin-top: 5px;
   padding: 5px;
-  padding-left: 15px;
+  padding-left: 15px; */
 }
 
 td,
@@ -108,12 +113,13 @@ td {
 #legend-label {
   display: flex;
   flex-direction: column;
+  margin-bottom: 10px;
 }
 
 #price-label {
   margin: 0px 0px 3px 30px;
-  font-weight: bold;
-  font-size: 15px;
+  /* font-weight: bold; */
+  font-size: 13px;
 }
 
 .property-buttons {
@@ -132,3 +138,75 @@ td {
   background-color: lightblue;
 }
 
+.title {
+  background-color: #4E79A7;
+  padding: 2px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  width: 1400px;
+}
+
+h1 {
+  font-size: 24px;
+  color: white;
+  margin-left: 10px;
+}
+
+.filters {
+  display: flex;
+}
+
+.main {
+  display: flex;
+}
+
+/* #property-button {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+} */
+
+.label {
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+#property-button {
+  margin-bottom: 15px;
+}
+
+.side-panel {
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  margin-left: 10px;
+  padding: 10px;
+  width: 550px;
+  /* height: 580px; */
+}
+
+#panel,
+.label,
+#property-button {
+  margin-left: 5px;
+}
+
+.first {
+  margin-left: 0;
+}
+
+#map {
+  /* width: auto; */
+  margin: 10px;
+
+}
+
+.map {
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  /* display: flex;
+  flex-direction: column; */
+}
+
+/* #legend-label {
+  align-self: flex-end;
+} */

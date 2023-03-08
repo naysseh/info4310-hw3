@@ -15,39 +15,56 @@
     <h1>Pittsburgh Zillow Properties</h1>
   </div>
 
-  <div class="orientation">
+  <!-- <div class="orientation"> -->
 
-    <div class="map-legend">
-      <div id="property-button"></div>
-      <div id="controls"></div>
-      <svg id="map" height="450" width="500"></svg>
+  <!-- <div class="map-legend"> -->
+  <!-- <div>Filter by Property Type:</div> -->
+  <div class="filters">
+
+
+
+  </div>
+
+  <!-- </div> -->
+  <div class="main">
+    <div class="map">
+      <svg id="map" height="600" width="800"></svg>
       <div id="legend-label">
-        <p id="price-label">Price ($):</p>
-        <svg id="barLegend" height="50" width="500"></svg>
-      </div>  
+        <p id="price-label">Sale Price ($):</p>
+        <svg id="barLegend" height="50" width="325"></svg>
+      </div>
     </div>
-    <div class="side-panel">
+    <div>
       <div class="info">
         <div>
-          This visualization displays shows properties in Pittsburgh available 
-          to buy. The circles on the map represent different properties: zoom in for more detail.  <br><br>
+          This visualization displays shows properties in Pittsburgh available
+          to buy. The circles on the map represent different properties: zoom in for more detail. <br><br>
 
           <span class="hl">Click </span>on the tabs of property types to display that property on the map. <br>
           <span class="hl">Click </span>on two circles on the map to compare property information. <br>
-          <span class="hl">Select</span> or <span class="hl">drag</span> an area within the sliders to adjust viewable data.<br>
+          <span class="hl">Select</span> or <span class="hl">drag</span> an area within the sliders to adjust viewable
+          data.<br>
         </div>
-        
-      </div>
 
-      <div id="panel">
-        <div id="reset-panel">
-          <h3>Price Comparison</h3>
-          <button class="button" id="resetButton" type="button">Reset</button>
-        </div>
       </div>
-    
+      <div class="side-panel">
+
+
+        <div class="label">Property Type:</div>
+        <div id="property-button"></div>
+        <div id="controls"></div>
+
+        <div id="panel">
+          <div id="reset-panel">
+            <h3>Price Comparison</h3>
+            <button class="button" id="resetButton" type="button">Reset Table</button>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
+  <!-- </div> -->
 
   <script>
     const map = d3.select("svg#map");
@@ -239,18 +256,18 @@
             }
           });
 
-          //Create zoom functionality and then call it only on the map
-          var zoom = d3.zoom()
-                   .scaleExtent([1,10])
-                   .on("zoom", zoomTransform);
+        //Create zoom functionality and then call it only on the map
+        var zoom = d3.zoom()
+          .scaleExtent([1, 10])
+          .on("zoom", zoomTransform);
 
-          function zoomTransform({transform}) { //unwrap the event into just the transform because we know what the event variable looks like
-            viewport.attr("transform", transform.toString());
-            // neighborhoodMesh.style("stroke-width", 1/transform.k);
-            // houses.attr("r", 3.5/transform.k);
-          }
+        function zoomTransform({ transform }) { //unwrap the event into just the transform because we know what the event variable looks like
+          viewport.attr("transform", transform.toString());
+          // neighborhoodMesh.style("stroke-width", 1/transform.k);
+          // houses.attr("r", 3.5/transform.k);
+        }
 
-          map.call(zoom);
+        map.call(zoom);
       }
 
       properties = ["All", "SingleFamily", "Townhouse", "Condominium", "MultiFamily2To4"];
@@ -273,16 +290,17 @@
           })
         if (d == 'All') {
           d3.selectAll('.property-buttons')
-            .attr("class", "property-buttons clicked")
+            .attr("class", "property-buttons clicked first")
         };
 
         ct++;
       });
 
       let headers = ["Street Address", "Neighborhood", "Sale Amount", "Bathroom", "Bedrooms"];
+      let headerLabels = ["Address", "Neighborhood", "Sale Price ($)", "# Bathrooms", "# Bedrooms"];
       let table = d3.select("#panel").append("table");
       let header = table.selectAll("th")
-        .data(headers)
+        .data(headerLabels)
         .enter().append("th")
         .text(function (d) {
           return d;
@@ -300,7 +318,7 @@
       function updatePanel(selectedPropertiesList) {
         console.log(selectedPropertiesList)
         header = table.selectAll("th")
-          .data(headers)
+          .data(headerLabels)
           .enter().append("th")
           .text(function (d) {
             return d;
