@@ -29,7 +29,7 @@
     <div>
       <div class="info">
         This visualization displays shows properties in Pittsburgh available
-        to buy. The circles on the map represent different properties: zoom in for more detail. <br><br>
+        to buy. The circles on the map represent different properties: hover over them to view more information.<br><br>
 
         <span class="hl">Scroll </span>over the map to zoom in and out. <br>
         <span class="hl">Click </span>on two circles on the map to compare property information. <br>
@@ -349,8 +349,7 @@
         // d[headers[i]]);
         rows.append("td").text(function (d) {
           if (i === 2) {
-            let value = d[headers[i]];
-            return formatFunc(value);
+            return formatFunc(d[headers[i]]);
             return 
           } else {
             return d[headers[i]];
