@@ -311,8 +311,8 @@
       ct++;
     });
 
-    let headers = ["Street Address", "Neighborhood", "Sale Amount", "Bathroom", "Bedrooms"];
-    let headerLabels = ["Address", "Neighborhood", "Sale Price ($)", "Bathrooms", "Bedrooms"];
+    let headers = ["Street Address", "Neighborhood", "Sale Amount", "Bathroom", "Bedrooms", "Property Type"];
+    let headerLabels = ["Address", "Neighborhood", "Sale Price ($)", "Bathrooms", "Bedrooms", "Type"];
     let table = d3.select("#panel").append("table");
     let header = table.selectAll("th")
       .data(headerLabels)
@@ -331,7 +331,6 @@
         });
 
     function updatePanel(selectedPropertiesList) {
-      console.log(selectedPropertiesList)
       header = table.selectAll("th")
         .data(headerLabels)
         .enter().append("th")
@@ -344,14 +343,25 @@
           update => update.selectAll("td").remove(),
           exit => exit.remove());
 
+      let formatFunc = d3.format(".2s");    
       for (var i = 0; i < headers.length; i++) {
-        rows.append("td").text(d => d[headers[i]]);
+        // rows.append("td").text(d => 
+        // d[headers[i]]);
+        rows.append("td").text(function (d) {
+          if (i === 2) {
+            let value = d[headers[i]];
+            return formatFunc(value);
+            return 
+          } else {
+            return d[headers[i]];
+          }
+
+        });
       }
     }
 
     function reset() {
       selectedProperties = [];
-      console.log("reset properties array", selectedProperties);
       d3.selectAll("circle.house")
         .attr("stroke-width", "0px")
         .classed("selectedProperty", false);
